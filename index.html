@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Include Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- Include custom CSS -->
+  <link rel="stylesheet" href="./main.css">
+    <title>weather</title>
+</head>
+<body>
+    <div class="container text-center">
+        <div class="clue">
+          <h1 class="fw-5">Weather App</h1>
+        <p class="text-light">Check the current weather conditions</p>
+        <div class="row">
+          <div class="col-md-6 offset-md-3">
+            <div class="input-group mb-3">
+              <input type="text" id="locationInput" class="form-control shadow " placeholder="Enter a city name">
+              <div class="input-group-append">
+                <button onclick="search()" class="btn btn-primary " id="searchButton">Search</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4"></div>
+              <div class="col-md-4">
+                
+              </div>
+                  
+             
+          
+          <div class="col-md-4"></div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+
+            <div id="result" class="res"></div>
+
+        </div>
+        <div class="col-md-4">
+            <div id="idco" class="ic"></div>
+        </div>
+        <div class="col-md-4">
+            <div id="details" class="datas"></div>
+        </div>
+      </div>
+        </div>
+      </div>
+
+</body>
+<script>
+    //function definition
+const search=async()=>{
+  let cityName=locationInput.value
+  console.log(cityName);
+  if(cityName)
+  {
+    const response=await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=db32aa37d65e16331673a392e044f98f`)
+    response.json().then((data)=>{console.log(data);
+    //name
+    let cName=data.name
+    console.log(cName);
+    //timedate
+    let dt=data.dt
+    let timezone=data.timezone
+    console.log(timezone);
+    //date
+    const d=new Date((dt-timezone)*1000)
+    let time=d.toGMTString()
+    console.log(time);
+    //country name
+    let country=data.sys.country
+    console.log(country);
+    //temperature
+    let temperature=data.main.temp
+    min_temp=Math.round(temperature-273.15)
+    tem=`${min_temp}`
+    console.log(tem);
+    //icon                                                                                          
+    let sym=data.weather[0].icon
+    console.log(sym);
+    //des
+    let des=data.weather[0].description
+    console.log(des);
+    //humidity
+    let Humidity=data.main.humidity
+    console.log(Humidity);
+    //sunset
+  let sunset=data.sys.sunset
+  let set=new Date(sunset*1000);
+  set_time=set.toLocaleTimeString()
+  console.log(set_time);
+    //sunrise
+    let sunRise=data.sys.sunrise
+    let rise=new Date(sunRise*1000);
+    rise_time=rise.toLocaleTimeString()
+    console.log(rise_time);
+     //wind
+    let wind=data.wind.speed
+    console.log(wind);
+    const icon=`https://openweathermap.org/img/wn/${sym}@2x.png`
+
+      result.innerHTML=` 
+      <h5 class="card-title fw-5 mt-5">Weather in ${cName},${country}</h5>
+      <p class="card-text mt-5 fw-2">Sunrise<i class="fa-solid fa-sun"></i>:- ${rise_time}</p>
+      <p class="card-text mt-5 fw-2">Sunset<i class="fa-regular fa-sun"></i>:- ${set_time}</p>
+
+       `
+       idco.innerHTML=`
+       
+      <div class="d-flex mt-3">
+        <img src="${icon}" width="150" height="200" class="img-fluid rounded-start" alt="...">
+      <p class="card-text mt-5 fw-bolder"> ${tem}&deg;C</p>
+       </div>
+       <p class="des card-text fw-4">${des}</p>
+       `
+       details.innerHTML=`
+       <div class="mt-5">
+        <p class="card-text">Humidity <i class="fa-solid fa-droplet"></i>: ${Humidity}%</p>
+        <p class="card-text mt-5">Wind <i class="fa-solid fa-wind"></i>: ${wind}m/s</p>
+       
+        <p class="card-text mt-5">${time}</p>
+        
+        </div>
+       `
+      
+      
+      
+      
+
+
+
+   })
+    
+
+ }
+ else{
+          alert('Please search for a valid city 😩')
+      }
+}
+</script>
+</html>
